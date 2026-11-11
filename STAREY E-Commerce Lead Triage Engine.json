@@ -1,0 +1,105 @@
+{
+  "name": "STAREY E-Commerce Lead Triage Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "starey-ecom-triage",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "e5030e0b-57ca-41cc-9961-d79fbf59b28c",
+      "name": "Incoming Ecom Webhook",
+      "webhookId": "752918fb-993a-4b3a-a466-2d708dd7f295"
+    },
+    {
+      "parameters": {
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6b1642c0-4f91-4511-a8ae-d1f0a579e487",
+      "name": "AI Intent Analyzer"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-high-priority",
+              "leftValue": "={{ $json.message.content }}",
+              "rightValue": "High",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "37c7a2ae-720b-4c70-a783-35af5f8acfb8",
+      "name": "Filter High-Ticket Leads"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Incoming Ecom Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Intent Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Intent Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Filter High-Ticket Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9590d6ab-575c-4219-ab73-27d0f4c1adbf",
+  "meta": {
+    "instanceId": "d4a15d0e70fc5ffee17719f7159168a52b8c0e132b2a942ccc9b3d525368ee54"
+  },
+  "nodeGroups": [],
+  "id": "FW10IP4d9jyEbOAM",
+  "tags": []
+}
